@@ -1,0 +1,29 @@
+[33mcommit 56bd6dde57b7f0e1a690bdb0c8d90a2351b5eb8c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m, [m[1;31morigin2/master[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: aurelien-oc-mentorship <65898532+aurelien-oc-mentorship@users.noreply.github.com>
+Date:   Sun Oct 29 07:57:16 2023 -0500
+
+    Update index.html
+
+[33mcommit 2909ca436dcf2da11ad9f81fbd3052e20ec74c18[m
+Author: aurelien-oc-mentorship <65898532+aurelien-oc-mentorship@users.noreply.github.com>
+Date:   Mon Sep 11 08:50:15 2023 -0500
+
+    Create README.md
+
+[33mcommit 4b54c31296bfd29c1a21347cf2c628e1f0815213[m
+Author: aurelien-oc-mentorship <65898532+aurelien-oc-mentorship@users.noreply.github.com>
+Date:   Fri Feb 3 07:55:23 2023 -0500
+
+    Fix Cross Origin Error on Images
+
+[33mcommit 84d5c634dcdd867934d6b889a769e2f9bd3257f6[m
+Author: aurelien-oc-mentorship <65898532+aurelien-oc-mentorship@users.noreply.github.com>
+Date:   Mon Nov 7 21:18:26 2022 -0500
+
+    Fix images missing and .env missing
+
+[33mcommit a0fabfc1d834de387c98d97f60b46b14078e83df[m
+Author: Aurelien <oc@aurelienantonio.com>
+Date:   Thu May 19 14:06:25 2022 -0500
+
+    First commit
