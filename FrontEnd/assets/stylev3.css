@@ -433,3 +433,27 @@ footer nav ul {
   justify-content: flex-end;
   margin: 2em
 }
+
+
+/* Hide modification elements by default */
+.modification, .edit-mod {
+  display: none;
+}
+
+/* Show when logged in */
+body.logged-in .modification, body.logged-in .edit-mod {
+  display: flex;
+}
+
+/* Hide filters when logged in */
+body.logged-in .tri {
+  display: none;
+}
+
+/* Modal display */
+.modal {
+  display: none;
+}
+body.logged-in .modal {
+  display: block;
+}

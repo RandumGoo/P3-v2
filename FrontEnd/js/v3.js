@@ -6,7 +6,7 @@ const objetButton = document.querySelector(".btn.objet");
 const appartementsButton = document.getElementById("Appartements");
 const hrButton = document.getElementById("H&r");
 const gallery = document.querySelector(".gallery");
-const form = document.querySelector(".form-login");
+// const form = document.querySelector(".form-login");
 const modifierMod = document.querySelector(".modification");
 const backMod = document.querySelector(".modal-back");
 const xMark = document.querySelectorAll(".fa-xmark");
@@ -192,7 +192,7 @@ function galeriesDisplayModal(worksModal) {
 const modifieBtn = document.querySelector(".modification");
 const tri = document.querySelector(".tri");
 const editVersion = document.querySelector(".edit-mod");
-const loginOut = document.querySelector(".login-logout");
+//const loginOut = document.querySelector(".login-logout");
 
 const connected = localStorage.getItem("token de connexion") ? true : false;
 
@@ -211,5 +211,7 @@ if (connected) {
 
 // //événement fermeture onglet ou redirection vers un autre site
 // window.addEventListener("unload", removeToken);
-
+ 
 window.addEventListener("load", fetcher);
+
+// if token exists in the storage, display logout button and the other things
