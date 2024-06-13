@@ -3,7 +3,6 @@ const loginForm = document.querySelector("#login-form");
 const emailInput = document.querySelector("#email");
 const passwordInput = document.querySelector("#password");
 const btnSeConnecter = document.getElementById("submit");
-const btnMdpOublie = document.querySelector("#forgot-password");
 const loginFailed = document.querySelector("#login-failed");
 const modifieBtn = document.querySelector(".modification");
 const tri = document.querySelector(".tri");
@@ -35,7 +34,7 @@ if (btnSeConnecter) {
                 const data = await response.json();
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("userId", data.userId);
-                window.location.href = "index.html";
+                window.location.href = "INDEX.html";
             } else if (response.status === 404 || response.status === 401) {
                 loginFailed.innerText = "Erreur dans l'identifiant ou le mot de passe";
             } else {
