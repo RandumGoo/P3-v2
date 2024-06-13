@@ -1,12 +1,11 @@
-let works = []; // Tableau pour stocker les données de la galerie
-let currentCategory = "Tous"; // Catégorie actuellement sélectionnée
+let works = []; // Array to store gallery data
+let currentCategory = "Tous"; // Currently selected category
 
 const allButton = document.getElementById("all");
 const objetButton = document.querySelector(".btn.objet");
 const appartementsButton = document.getElementById("Appartements");
 const hrButton = document.getElementById("H&r");
 const gallery = document.querySelector(".gallery");
-// const form = document.querySelector(".form-login");
 const modifierMod = document.querySelector(".modification");
 const backMod = document.querySelector(".modal-back");
 const xMark = document.querySelectorAll(".fa-xmark");
@@ -14,26 +13,34 @@ const imageModal = document.getElementById("file");
 const titreModal = document.getElementById("title-modal");
 const categorieModal = document.getElementById("categorie-modal");
 const displayModal = document.querySelector(".display-works-modal");
+const loginBtn = document.getElementById("login-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const modal = document.getElementById("modal");
+const blackBar = document.querySelector(".edit-mod");
 
-async function fetcher() {
-  await fetch(`http://localhost:5678/api/works`)
-    .then((res) => res.json())
-    .then((data) => (works = data));
-
-  filterWorksByCategory(currentCategory);
-  galeriesDisplayModal(works);
+async function fetchWorks() {
+  try {
+    const response = await fetch("http://localhost:5678/api/works");
+    if (!response.ok) {
+      throw new Error("Failed to fetch works");
+    }
+    const data = await response.json();
+    works = data;
+    filterWorksByCategory(currentCategory);
+    galeriesDisplayModal(works);
+  } catch (error) {
+    console.error("Error fetching works:", error);
+  }
 }
 
 function galeriesDisplay(filteredWorks) {
   gallery.innerHTML = filteredWorks
     .map(
       (work) =>
-        `
-        <figure id=${work.id}>
-          <img src=${work.imageUrl}>
+        `<figure id="${work.id}">
+          <img src="${work.imageUrl}">
           <figcaption>${work.title}</figcaption>
-        </figure>
-      `
+        </figure>`
     )
     .join("");
 }
@@ -43,9 +50,8 @@ function filterWorksByCategory(category) {
     category === "Tous"
       ? works
       : works.filter((work) => work.category.name === category);
-  console.log(filteredWorks);
   galeriesDisplay(filteredWorks);
-  currentCategory = category; // Mettre à jour la catégorie actuelle
+  currentCategory = category; // Update current category
 }
 
 allButton.addEventListener("click", () => {
@@ -64,25 +70,28 @@ hrButton.addEventListener("click", () => {
   filterWorksByCategory("Hotels & restaurants");
 });
 
-// window.addEventListener("load", fetcher);
-
 modifierMod.addEventListener("click", () => {
-  document.getElementById("modal").style.display = "block";
+  if (localStorage.getItem("token")) {
+    modal.style.display = "block";
+    blackBar.style.display = "block";
+  } else {
+    alert("You need to log in to access editing mode.");
+  }
 });
 
 backMod.addEventListener("click", () => {
-  document.getElementById("modal").style.display = "none";
+  modal.style.display = "none";
+  blackBar.style.display = "none";
 });
 
 xMark.forEach((mark) =>
   mark.addEventListener("click", () => {
-    document.getElementById("modal").style.display = "none";
+    modal.style.display = "none";
+    blackBar.style.display = "none";
   })
 );
 
-/* modal */
-
-/* navigation modal */
+/* Modal Navigation */
 
 const modalAdding = document.querySelector(".modal-adding");
 const modalDelete = document.querySelector(".modal-delete");
@@ -99,12 +108,11 @@ arrowLeft.addEventListener("click", () => {
   modalDelete.style.display = "block";
 });
 
-/* Ajout images */
+/* Add images */
 
 const selectedImage = document.getElementById("selected-image");
 const imgChoose = document.querySelector(".before-selected");
-const SelecImage = document.querySelector(".after-selected");
-const myForm = document.getElementById("submit-modal");
+const submitModalForm = document.getElementById("submit-modal");
 
 imageModal.addEventListener("change", function (event) {
   const file = event.target.files[0];
@@ -117,101 +125,114 @@ imageModal.addEventListener("change", function (event) {
   }
 });
 
-myForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  console.log("form submitted");
+submitModalForm.addEventListener("submit", async (event) => {
+  event.preventDefault(); // Prevent default form submission
   const file = imageModal.files[0];
 
   if (file) {
-    alert("salut");
     const formData = new FormData();
     formData.append("image", file);
-    formData.append("title", `${titreModal.value}`);
-    formData.append("category", `${categorieModal.value}`);
-    // const requestOptions = {
-    //   method: "POST",
-    //   body: formData,
-    //   headers: {
-    //     accept: "application/json",
-    //     Authorization: `Bearer ${localStorage.getItem("token de connexion")}`,
-    //   },
-//     };
+    formData.append("title", titreModal.value);
+    formData.append("category", categorieModal.value);
 
-//     fetch("http://localhost:5678/api/works", requestOptions)
-//       .then((response) => response.json())
-//       .then((data) => {
-//         console.log(data);
-//       })
-//       .catch((error) => {
-//         console.error("Erreur lors de l'envoi de la requête:", error);
-//       });
-//   } else {
-//     event.preventDefault();
-//     console.error("Aucun fichier sélectionné.");
+    const requestOptions = {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5678/api/works",
+        requestOptions
+      );
+      if (!response.ok) {
+        throw new Error("Failed to add work");
+      }
+      const data = await response.json();
+      works.push(data); // Update works array
+      filterWorksByCategory(currentCategory); // Update gallery display
+      galeriesDisplayModal(works); // Update modal display
+    } catch (error) {
+      console.error("Error adding work:", error);
+    }
+  } else {
+    console.error("No file selected.");
   }
 });
-
-/* DELETE SECTION */
 
 function galeriesDisplayModal(worksModal) {
   displayModal.innerHTML = worksModal
     .map(
       (work) =>
-        `
-        <figure class="works">
-          <i id=${work.id} class="fa-solid fa-trash-can"></i>
-          <img src=${work.imageUrl}>
-        </figure>
-        `
+        `<figure class="works">
+          <i id="${work.id}" class="fa-solid fa-trash-can"></i>
+          <img src="${work.imageUrl}">
+        </figure>`
     )
     .join("");
 
-  const trashCan = document.querySelectorAll(".fa-trash-can");
-
-  trashCan.forEach(function (trash) {
-    trash.addEventListener("click", function (event) {
-      event.preventDefault();
-      const elementId = event.currentTarget.id;
-      const requestOptionsDelete = {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token de connexion")}`,
-        },
-      };
-
-      fetch(
-        `http://localhost:5678/api/works/${elementId}`,
-        requestOptionsDelete
-      );
+  const trashCans = document.querySelectorAll(".fa-trash-can");
+  trashCans.forEach((can) => {
+    can.addEventListener("click", async () => {
+      const workId = can.id;
+      try {
+        const response = await fetch(
+          `http://localhost:5678/api/works/${workId}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to delete work");
+        }
+        can.parentElement.remove(); // Remove element from DOM
+        works = works.filter((work) => work.id !== parseInt(workId)); // Update works array
+        filterWorksByCategory(currentCategory); // Update gallery display
+        galeriesDisplayModal(works); // Update modal display
+      } catch (error) {
+        console.error("Error deleting work:", error);
+      }
     });
   });
 }
 
-/* gestion login-side of the site */
+fetchWorks();
 
-const modifieBtn = document.querySelector(".modification");
-const tri = document.querySelector(".tri");
-const editVersion = document.querySelector(".edit-mod");
-//const loginOut = document.querySelector(".login-logout");
+// Handle login and logout state without page reload
+const updateLoginState = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    loginBtn.style.display = "none";
+    logoutBtn.style.display = "inline";
+    modal.style.display = "block"; // Show modal if logged in
+    blackBar.style.display = "block"; // Show black bar of edition mode
+  } else {
+    loginBtn.style.display = "inline";
+    logoutBtn.style.display = "none";
+    modal.style.display = "none"; // Hide modal if not logged in
+    blackBar.style.display = "none"; // Hide black bar of edition mode
+  }
+};
 
-const connected = localStorage.getItem("token de connexion") ? true : false;
+loginBtn.addEventListener("click", () => {
+  // Perform login logic
+  // For demonstration, assume login is successful and set a token
+  localStorage.setItem("token", "example-token");
+  updateLoginState();
+});
 
-if (connected) {
-  modifieBtn.style.display = "flex";
-  tri.style.display = "none";
-  editVersion.style.display = "flex";
-  loginOut.innerText = "Logout";
-}
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("token");
+  updateLoginState();
+  modal.style.display = "none"; // Hide the modal if it is open
+  blackBar.style.display = "none"; // Hide the black bar of edition mode
+});
 
-// //LOG OUT!! a la fermeture onglet / redirection & Rechargement pour la sécurité
-// function removeToken() {
-//   // Supprime le token du localStorage
-//   localStorage.removeItem("token de connexion");
-// }
-
-// //événement fermeture onglet ou redirection vers un autre site
-// window.addEventListener("unload", removeToken);
- 
-window.addEventListener("load", fetcher);
-
-// if token exists in the storage, display logout button and the other things
+// Initialize login state on page load
+updateLoginState();

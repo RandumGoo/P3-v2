@@ -29,7 +29,7 @@
     </div>
   </div>
   <body>
-    <div class="modal" id="modal">
+    <div class="modal" id="modal" style="display: none;">
       <div class="modal-back"></div>
       <div class="modal-container">
         <div class="modal-delete">
@@ -98,10 +98,8 @@
         <ul>
           <li><a href="#">projets</a></li>
           <li><a href="#">contact</a></li>
-          <li>
-            <a href="login2.html" class="login-logout"
-              >login</a
-            >
+          <li><a href="login2.html" id="login-btn">Login</a></li>
+          <li><a href="INDEX.html" id="logout-btn" style="display: none;">Logout</a></li>
           </li>
           <li><img src="./assets/icons/instagram.png" alt="Instagram" /></li>
         </ul>
@@ -172,6 +170,7 @@
 
     <script src="js/v3.js"></script>
     <script src="js/logincg.js"></script> 
+    <script src="js/v3login.js"></script> 
     
   </body>
 </html>
